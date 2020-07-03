@@ -1,5 +1,5 @@
 ESX = nil
-local PlayerLoaded HasAlreadyEnteredMarker, clockedIn, vehicleSpawned, getPizza, pizzaDeposit = false, false, false, false, false, false
+local PlayerLoaded HasAlreadyEnteredMarker, clockedin, vehiclespawned, getpizza, pizzadeposit = false, false, false, false, false, false
 local DeliveryJobs = {}
 local mainblip, work_car, currentstop
 
@@ -55,6 +55,11 @@ AddEventHandler('viv_pizza:leftArea', function()
 	CurrentActionMsg = ''
 end)
 
+RegisterNetEvent('viv_pizzajob:movecarcount')
+AddEventHandler('viv_pizzajob:movecarcount', function(count)
+	Config.CarPlateNumb = count
+end)
+
 AddEventHandler('viv_pizza:checkJob', function()
 	if PlayerData.job.name ~= 'pizza' then
 		if mainblip ~= nil then
@@ -86,7 +91,7 @@ AddEventHandler('viv_pizza:enteredArea', function(zone)
 
 	if CurrentAction == 'vehiclelist' then
 		if clockedin and not vehiclespawned then 
-			MenuVehicleSpawner()
+			OpenVehicleSpawnerMenu()
 		end
 	end
 
@@ -127,7 +132,7 @@ function OpenCloakRoomMenu()
 				ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin, jobSkin)
 					TriggerEvent('skinchanger:loadSkin', skin)
 				end)
-				clockedIn = false
+				clockedin = false
 			  end
 			  
 			if data.current.value == 'job_wear' then
@@ -138,7 +143,7 @@ function OpenCloakRoomMenu()
 						TriggerEvent('skinchanger:loadClothes', skin, jobSkin.skin_female)
 					end
 				end)
-				clockedIn = true
+				clockedin = true
 			end
 			
 			if data.current.value == 'job_wear' then
@@ -194,15 +199,14 @@ function OpenVehicleSpawnerMenu()
 					SetVehicleNumberPlateText(vehicle, 'PIZZA'..carplatenum)
 					workcarplate =   'PIZZA'..carplatenum 
 				end
-
-				TriggerServerEvent('esx_garbagecrew:movetruckcount')   
+				TriggerServerEvent('viv_pizzajob:movecarcount')
 				SetEntityAsMissionEntity(vehicle, true, true)
 					local vehNet = NetworkGetNetworkIdFromEntity(vehicle)
   			  		local plate = GetVehicleNumberPlateText(vehicle)
    					TriggerServerEvent("VIVS_Locking:GiveKeys", vehNet, plate)
 				TaskWarpPedIntoVehicle(GetPlayerPed(-1), vehicle, -1)  
-				vehicleSpawned = true 
-				getPizza = false
+				vehiclespawned = true 
+				getpizza = false
 				work_car = vehicle
 				currentstop = 0
 				FindDeliveryLoc()

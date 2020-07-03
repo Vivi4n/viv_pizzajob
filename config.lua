@@ -1,3 +1,9 @@
+Config = {}
+Config.Locale = 'en'
+Config.PizzaPay = 200
+Config.CarPlateNumb = 0
+Config.MaxStops	= 10
+
 Config.Zones = {
 	[1] = {type = 'Zone', size = 3.0 , name = 'timeclock', pos = vector3(169.51, -1633.76, 29.29)},
 }
